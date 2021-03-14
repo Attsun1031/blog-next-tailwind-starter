@@ -1,83 +1,53 @@
 
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-      <title>Next.js Starter Blog</title>
-      <link>https://tailwind-nextjs-starter-blog.vercel.app/blog</link>
-      <description>A blog created with Next.js and Tailwind.css</description>
-      <language>en-us</language>
-      <managingEditor>address@yoursite.com (Tails Azimuth)</managingEditor>
-      <webMaster>address@yoursite.com (Tails Azimuth)</webMaster>
-      <lastBuildDate>Tue, 12 Jan 2021 00:00:00 GMT</lastBuildDate>
-      <atom:link href="https://tailwind-nextjs-starter-blog.vercel.app/index.xml" rel="self" type="application/rss+xml"/>
+      <title>Attsun Blog</title>
+      <link>https://attsun1031.github.io//blog</link>
+      <description>my blog</description>
+      <language>ja</language>
+      <managingEditor> (Tatsuya Atsumi)</managingEditor>
+      <webMaster> (Tatsuya Atsumi)</webMaster>
+      <lastBuildDate>Wed, 10 Feb 2021 01:40:39 GMT</lastBuildDate>
+      <atom:link href="https://attsun1031.github.io//index.xml" rel="self" type="application/rss+xml"/>
       
   <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/introducing-tailwind-nextjs-starter-blog</guid>
-    <title>Introducing Tailwind Nexjs Starter Blog</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/introducing-tailwind-nextjs-starter-blog</link>
-    <description>Looking for a performant, out of the box template, with all the best in web technology to support your blogging needs? Checkout the Tailwind Nextjs Starter Blog template.</description>
-    <pubDate>Tue, 12 Jan 2021 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Tails Azimuth)</author>
-    <category>next-js</category><category>tailwind</category><category>guide</category>
+    <guid>https://attsun1031.github.io//blog/dbt-dataform-comparison</guid>
+    <title>dbtとDataformを比較し、dbtを使うことにした</title>
+    <link>https://attsun1031.github.io//blog/dbt-dataform-comparison</link>
+    <description>undefined</description>
+    <pubDate>Wed, 10 Feb 2021 01:40:39 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    <category>tech</category><category>data</category>
   </item>
 
   <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/guide-to-using-images-in-nextjs</guid>
-    <title>Images in Next.js</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/guide-to-using-images-in-nextjs</link>
-    <description>In this article we introduce adding images in the tailwind starter blog and the benefits and limitations of the next/image component.</description>
-    <pubDate>Wed, 11 Nov 2020 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Tails Azimuth)</author>
-    <category>next js</category><category>guide</category>
+    <guid>https://attsun1031.github.io//blog/python-validation-framework-comparison</guid>
+    <title>Pythonスキーマバリデーションライブラリ比較 (pydantic, marshmallow, attrs, cerberus)</title>
+    <link>https://attsun1031.github.io//blog/python-validation-framework-comparison</link>
+    <description>undefined</description>
+    <pubDate>Sat, 16 Jan 2021 03:49:44 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    <category>python</category><category>tech</category>
   </item>
 
   <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/deriving-ols-estimator</guid>
-    <title>Deriving the OLS Estimator</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/deriving-ols-estimator</link>
-    <description>How to derive the OLS Estimator with matrix notation and a tour of math typesetting using markdown with the help of KaTeX.</description>
-    <pubDate>Sat, 16 Nov 2019 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Tails Azimuth)</author>
-    <category>next js</category><category>math</category><category>ols</category>
+    <guid>https://attsun1031.github.io//blog/2020-summary</guid>
+    <title>2020年 よかった○○</title>
+    <link>https://attsun1031.github.io//blog/2020-summary</link>
+    <description>undefined</description>
+    <pubDate>Thu, 31 Dec 2020 09:21:27 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    
   </item>
 
   <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/github-markdown-guide</guid>
-    <title>Markdown Guide</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/github-markdown-guide</link>
-    <description>Markdown cheatsheet for all your blogging needs - headers, lists, images, tables and more! An illustrated guide based on Github Flavored Markdown.</description>
-    <pubDate>Fri, 11 Oct 2019 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Tails Azimuth)</author>
-    <category>github</category><category>guide</category>
-  </item>
-
-  <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/the-time-machine</guid>
-    <title>The Time Machine</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/the-time-machine</link>
-    <description>The Time Traveller (for so it will be convenient to speak of him) was expounding a recondite matter to us. His pale grey eyes shone and twinkled, and his usually pale face was flushed and animated...</description>
-    <pubDate>Wed, 15 Aug 2018 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Tails Azimuth)</author>
-    <category>writings</category><category>book</category><category>reflection</category>
-  </item>
-
-  <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/pictures-of-canada</guid>
-    <title>O Canada</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/pictures-of-canada</link>
-    <description>The scenic lands of Canada featuring maple leaves, snow-capped mountains, turquoise lakes and Toronto. Take in the sights in this photo gallery exhibition and see how easy it is to replicate with some MDX magic and tailwind classes.</description>
-    <pubDate>Sat, 15 Jul 2017 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Tails Azimuth)</author>
-    <category>holiday</category><category>canada</category><category>images</category>
-  </item>
-
-  <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/code-sample</guid>
-    <title>Sample .md file</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/code-sample</link>
-    <description>Example of a markdown file with code blocks and syntax highlighting</description>
-    <pubDate>Tue, 08 Mar 2016 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Tails Azimuth)</author>
-    <category>markdown</category><category>code</category><category>features</category>
+    <guid>https://attsun1031.github.io//blog/my-first-post</guid>
+    <title>noteから、Hugo + Github Pagesに移行した</title>
+    <link>https://attsun1031.github.io//blog/my-first-post</link>
+    <description>undefined</description>
+    <pubDate>Thu, 31 Dec 2020 02:52:09 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    
   </item>
 
     </channel>
