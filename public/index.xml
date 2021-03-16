@@ -7,15 +7,15 @@
       <language>ja</language>
       <managingEditor> (Tatsuya Atsumi)</managingEditor>
       <webMaster> (Tatsuya Atsumi)</webMaster>
-      <lastBuildDate>Wed, 10 Feb 2021 01:40:39 GMT</lastBuildDate>
+      <lastBuildDate>Wed, 10 Feb 2021 00:00:00 GMT</lastBuildDate>
       <atom:link href="https://attsun1031.github.io//index.xml" rel="self" type="application/rss+xml"/>
       
   <item>
     <guid>https://attsun1031.github.io//blog/dbt-dataform-comparison</guid>
     <title>dbtとDataformを比較し、dbtを使うことにした</title>
     <link>https://attsun1031.github.io//blog/dbt-dataform-comparison</link>
-    <description>undefined</description>
-    <pubDate>Wed, 10 Feb 2021 01:40:39 GMT</pubDate>
+    <description>データ品質の担保としてdbtとDataformを比較し、dbtを選択しました。</description>
+    <pubDate>Wed, 10 Feb 2021 00:00:00 GMT</pubDate>
     <author> (Tatsuya Atsumi)</author>
     <category>tech</category><category>data</category>
   </item>
@@ -24,8 +24,8 @@
     <guid>https://attsun1031.github.io//blog/python-validation-framework-comparison</guid>
     <title>Pythonスキーマバリデーションライブラリ比較 (pydantic, marshmallow, attrs, cerberus)</title>
     <link>https://attsun1031.github.io//blog/python-validation-framework-comparison</link>
-    <description>undefined</description>
-    <pubDate>Sat, 16 Jan 2021 03:49:44 GMT</pubDate>
+    <description>Pythonスキーマバリデーションライブラリについて比較してみました。</description>
+    <pubDate>Sat, 16 Jan 2021 00:00:00 GMT</pubDate>
     <author> (Tatsuya Atsumi)</author>
     <category>python</category><category>tech</category>
   </item>
@@ -34,18 +34,8 @@
     <guid>https://attsun1031.github.io//blog/2020-summary</guid>
     <title>2020年 よかった○○</title>
     <link>https://attsun1031.github.io//blog/2020-summary</link>
-    <description>undefined</description>
-    <pubDate>Thu, 31 Dec 2020 09:21:27 GMT</pubDate>
-    <author> (Tatsuya Atsumi)</author>
-    
-  </item>
-
-  <item>
-    <guid>https://attsun1031.github.io//blog/my-first-post</guid>
-    <title>noteから、Hugo + Github Pagesに移行した</title>
-    <link>https://attsun1031.github.io//blog/my-first-post</link>
-    <description>undefined</description>
-    <pubDate>Thu, 31 Dec 2020 02:52:09 GMT</pubDate>
+    <description>2020 年に読んだ本や買ったもののうち、良かったモノを紹介したいと思います。</description>
+    <pubDate>Thu, 31 Dec 2020 00:00:00 GMT</pubDate>
     <author> (Tatsuya Atsumi)</author>
     
   </item>
