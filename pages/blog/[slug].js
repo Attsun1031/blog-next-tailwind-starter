@@ -22,10 +22,10 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const allPosts = await getAllFilesFrontMatter('blog')
   const postIndex = allPosts.findIndex((post) => post.slug === params.slug)
-  //const prev = allPosts[postIndex + 1] || null
-  //const next = allPosts[postIndex - 1] || null
-  const prev = null
-  const next = null
+  const prev = allPosts[postIndex + 1] || null
+  const next = allPosts[postIndex - 1] || null
+  // const prev = null
+  // const next = null
   const post = await getFileBySlug('blog', params.slug)
 
   // rss
