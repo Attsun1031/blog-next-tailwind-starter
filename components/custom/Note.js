@@ -1,6 +1,6 @@
 const Note = ({ title, desc }) => (
   <div
-    className="bg-indigo-100 border-t-4 border-indigo-500 rounded-b text-indigo-900 px-4 py-3 shadow-md"
+    className="bg-indigo-100 border-t-4 border-indigo-500 rounded-b text-indigo-900 px-4 py-3 shadow-md mb-8"
     role="alert"
   >
     <div className="flex">
