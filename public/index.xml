@@ -7,17 +7,17 @@
       <language>ja</language>
       <managingEditor> (Tatsuya Atsumi)</managingEditor>
       <webMaster> (Tatsuya Atsumi)</webMaster>
-      <lastBuildDate>Mon, 05 Apr 2021 00:00:00 GMT</lastBuildDate>
+      <lastBuildDate>Fri, 16 Apr 2021 00:00:00 GMT</lastBuildDate>
       <atom:link href="https://attsun1031.github.io//index.xml" rel="self" type="application/rss+xml"/>
       
   <item>
-    <guid>https://attsun1031.github.io//blog/what-is-datamesh</guid>
-    <title>Data Meshとは何か？ - 真にスケーラブルなデータ基盤を求めて -</title>
-    <link>https://attsun1031.github.io//blog/what-is-datamesh</link>
-    <description>Data Meshについての解説記事です。</description>
-    <pubDate>Mon, 05 Apr 2021 00:00:00 GMT</pubDate>
+    <guid>https://attsun1031.github.io//blog/20210416-bq-sushi-dbt</guid>
+    <title>bq_sushi #17 にて、「Data Management by dbt」という発表をしました。</title>
+    <link>https://attsun1031.github.io//blog/20210416-bq-sushi-dbt</link>
+    <description>イベント登壇記録</description>
+    <pubDate>Fri, 16 Apr 2021 00:00:00 GMT</pubDate>
     <author> (Tatsuya Atsumi)</author>
-    <category>data</category><category>tech</category><category>datamesh</category>
+    <category>data</category><category>slide</category><category>dbt</category>
   </item>
 
   <item>
