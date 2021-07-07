@@ -7,9 +7,19 @@
       <language>ja</language>
       <managingEditor> (Tatsuya Atsumi)</managingEditor>
       <webMaster> (Tatsuya Atsumi)</webMaster>
-      <lastBuildDate>Tue, 08 Jun 2021 00:00:00 GMT</lastBuildDate>
+      <lastBuildDate>Wed, 07 Jul 2021 00:00:00 GMT</lastBuildDate>
       <atom:link href="https://attsun1031.github.io//index.xml" rel="self" type="application/rss+xml"/>
       
+  <item>
+    <guid>https://attsun1031.github.io//blog/gcp-three-things</guid>
+    <title>GCPで、適当に実行すべきでない3つのコト</title>
+    <link>https://attsun1031.github.io//blog/gcp-three-things</link>
+    <description>GCPで、実行前に立ち止まって考えたい3つの事についてまとめました。</description>
+    <pubDate>Wed, 07 Jul 2021 00:00:00 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    <category>tech</category><category>gcp</category>
+  </item>
+
   <item>
     <guid>https://attsun1031.github.io//blog/what-is-datamesh</guid>
     <title>Data Meshとは何か？</title>
