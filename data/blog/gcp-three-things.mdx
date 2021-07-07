@@ -1,0 +1,117 @@
+---
+title: 'GCPで、適当に実行すべきでない3つのコト'
+date: '2021-07-07'
+draft: false
+summary: 'GCPで、実行前に立ち止まって考えたい3つの事についてまとめました。'
+tags: ['tech', 'gcp']
+---
+
+# About
+
+GCP で、実行前に気をつけたい 3 つの機能を紹介します。
+
+元ネタは、同僚の [@sakajunquality](https://twitter.com/sakajunquality) が社内用に作ったドキュメントです。
+内容がとても良かったので、本人に許可を取った上で加筆修正し、公開しています。
+
+# TL;DR
+
+GCP では、以下 3 つの作業に注意しましょう
+
+1. Service Account のクレデンシャルダウンロード。対策として、そもそもダウンロードしなければいけない機会を減らしましょう。また、権限を適切に絞りましょう
+2. Compute Engine Default Service Accont の利用。対策として、専用の Service Account を用意しましょう
+3. App Engine の有効化。有効化する際はリージョンに気をつけましょう。なんとなく有効化するのはやめましょう
+
+# (1) Service Account Key のダウンロード
+
+GCP では以下のように ServiceAccount (以下、SA) の Key をダウンロードし、その SA を使うことができます。
+
+[公式 Doc](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys)
+
+## 何が問題か？
+
+特にローカル端末へのダウンロードは、権限の管理が難しくする要因となります。
+結果として、例えば以下のようなリスクが出てきます。
+
+- ローカルから外部への流出（例：自分の Public Repostiory に上げちゃいました）
+- ダウンロードしたメンバーが退職した際のローテート
+
+SA に `Project Editor` や `Project Owner` のような非常に強い権限が付与されている場合、リスクは大きくなります。
+
+## どうすればよいか？
+
+### 権限を絞る
+
+各 SA に、用途に応じた最小限の権限を設定しましょう。面倒くさがって `Project Editor` や Project Owner` をとりあえずつけてしまうのは NG です。
+
+また、Terraform を利用することで、権限が必要な文脈やこれまでの経緯などが残ったり、PR ベースの権限付与が可能となるのででオススメです。
+
+[google_project_iam](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam)
+
+### キーのダウンロードを不要にする
+
+そもそもキーが必要とならないようにすることも有効です。
+
+#### Workfload Identity
+
+GKE 内で GCP の SA を利用したい場合、 [Workflow Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) の仕組みを利用することで、キーのダウンロードをせずに SA を利用することが可能となります。具体的には、GCP の SA を Kubernetes の SA に紐づけています。
+
+AWS など GCP 外から SA を利用する場合でも、 [Workload identity federation](https://cloud.google.com/iam/docs/workload-identity-federation) の利用が可能です。
+
+#### Service Account Impersonation
+
+ローカルなど、Workload Identity を利用できない場合でも、[Service Account Impersonation](https://cloud.google.com/iam/docs/impersonating-service-accounts) によりキーのダウンロードを回避できます。
+
+例えば gcloud コマンドであれば、上記のリンクの権限を付与した後、 `gloud --impersonate-service-account {SA の email} ...` とすることで、その SA の権限においてコマンドを実行できます。
+
+## ダウンロードを回避できない場合
+
+例えば SaaS から GCP リソースを操作させる場合、キーのダウンロードが必須になってしまうケースは存在します。
+
+こういった場合でも、`roles/iam.serviceAccountKeyAdmin` を付与するユーザーを限定するなどにより、無闇なダウンロードを防ぎましょう。
+
+# (2) Compute Engine Default Service Account を利用
+
+Compute Engine の API を有効化すると、 `PROJECT_NUMBER-compute@developer.gserviceaccount.com` のような SA が自動で作成されます。
+
+この SA は Cloud Composer や Dataflow といった、Compute Engine をサービスの一部として利用するサービスにおいても利用されます。
+
+## 何が問題か？
+
+この SA は `roles/editor` という強い権限をプロジェクトレベルで持っています。
+
+特定の用途にのみ利用する場合には問題ありません。しかし、複数のアプリやサービスの配置など用途が異なるもの混在させる場合、この SA を利用した Compute Instance からはほぼあらゆるリソースにアクセスできてしまうため、ガバナンス観点でも望ましくありませんし、思わぬ事故につながるリスクもあります。
+
+## どうすればよいか？
+
+(1) の内容に繋がりますが、ワークロードごとに権限を絞った SA を作り、起動時に適切な SA を利用するようにしましょう。
+
+また、Dataflow, DataProc, DataFusion については、Compute Engine Default SA を impersonate する権限がないにも関わらず、その権限において起動できてしまうというレガシーな挙動が残っています。
+
+[こちらのドキュメント](https://cloud.google.com/iam/docs/service-accounts-actas#dataproc-dataflow-datafusion)を参考に、このようなな挙動をオフにすることで、安易に Compute Engine Default SA の利用を防ぐことも可能です。
+
+# (3) 適当に App Engine を有効化 / Deploy
+
+## 何が問題か？
+
+### App Engine のリージョンが他のサービスにも不可逆な影響を及ぼす
+
+App Engine を有効化する際にはリージョンを選びますが、一度選ぶと変更できません。
+そして、Cloud Tasks, Cloud Scheduler などもこのリージョンに依存します。
+
+### デフォルトで強力な権限を持った SA が利用される
+
+(2) の Compute Engine Default SA と同じく、 `roles/editor` をプロジェクトレベルで持った強力な SA が利用されます。
+
+厄介なのは、例えば Cloud Run のように任意の SA を指定してデプロイすることができません。
+
+なので、SA を変更するのではなく、デフォルト SA の権限を調整するという方法が[こちらのドキュメント](https://cloud.google.com/appengine/docs/standard/python3/service-account)で紹介されています。
+
+### どうすればよいか？
+
+App Engine を使いたいのであれば、リージョンは慎重に選択しましょう。使ってみたいだけであれば、サンドボックス用のプロジェクトなど、潰しても良いプロジェクトを選びましょう。
+
+また、現在であれば Cloud Run も、App Engine 並の手軽さと低コストでアプリケーションの運用ができるのでオススメです。
+
+---
+
+以上、GCP で実行前に気をつけたい 3 つのことの紹介でした。
