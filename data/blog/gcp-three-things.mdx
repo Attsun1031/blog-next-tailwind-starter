@@ -85,9 +85,15 @@ Compute Engine の API を有効化すると、 `PROJECT_NUMBER-compute@develope
 
 (1) の内容に繋がりますが、ワークロードごとに権限を絞った SA を作り、起動時に適切な SA を利用するようにしましょう。
 
-また、Dataflow, DataProc, DataFusion については、Compute Engine Default SA を impersonate する権限がないにも関わらず、その権限において起動できてしまうというレガシーな挙動が残っています。
+### GKE の場合
 
-[こちらのドキュメント](https://cloud.google.com/iam/docs/service-accounts-actas#dataproc-dataflow-datafusion)を参考に、このようなな挙動をオフにすることで、安易に Compute Engine Default SA の利用を防ぐことも可能です。
+[こちらの公式ドキュメント](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa)に、GKE Standard Cluster を構築する場合に必要なミニマムの権限が紹介されていますので、このガイドをベースに SA を作成しましょう。
+
+### Dataflow, DataProc, DataFusion の場合
+
+Dataflow, DataProc, DataFusion については、Compute Engine Default SA を impersonate する権限がないにも関わらず、その権限において起動できてしまうというレガシーな挙動が残っています。
+
+[こちらのドキュメント](https://cloud.google.com/iam/docs/service-accounts-actas#dataproc-dataflow-datafusion)を参考に、このようなな挙動をオフにすることで、安易に Compute Engine Default SA の利用を防ぐことが可能です。
 
 # (3) 適当に App Engine を有効化 / Deploy
 
