@@ -21,9 +21,11 @@ jobs:
       - name: Update Submodules
         run: |
           git submodule update --remote
-          # cd published-contents
-          # git pull origin main
-          # cd -
+
+      - name: Convert to full clone
+        working-directory: published-contents
+        run: |
+          git fetch --unshallow
 
       - uses: actions/setup-node@v2
         with:
@@ -41,8 +43,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT_FOR_SUBMODULE }}
-          repository: "Attsun1031/Attsun1031.github.io"
-          # path: "published-contents"
+          path: "published-contents"
           base: "main"
           delete-branch: true
           draft: false
