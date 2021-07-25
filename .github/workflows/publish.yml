@@ -19,7 +19,11 @@ jobs:
           fetch-depth: 0
 
       - name: Update Submodules
-        run: git submodule update --remote
+        run: |
+          git submodule update --remote
+          cd published-contents
+          git pull
+          cd -
 
       - uses: actions/setup-node@v2
         with:
