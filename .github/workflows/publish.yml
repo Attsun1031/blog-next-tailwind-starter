@@ -6,21 +6,25 @@ on:
     branches:
       - main
 
+env:
+  DEST_DIR: "Attsun1031.github.io"
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main repo
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-          submodules: 'recursive'
-          token: ${{ secrets.PAT_FOR_SUBMODULE }}
-          fetch-depth: 0
 
-      - name: Update Submodules
-        run: |
-          git submodule update --remote
+      - name: Checkout blog repo
+        uses: actions/checkout@v2
+        with:
+          repository: "Attsun1031/Attsun1031.github.io"
+          ref: ${{ github.head_ref }}
+          path: ${{ env.DEST_DIR }}
+          token: ${{ secrets.PAT_FOR_SUBMODULE }}
 
       - uses: actions/setup-node@v2
         with:
@@ -30,7 +34,7 @@ jobs:
         run: |
           npm install
           npm run export
-          ./scripts/copy_to_publish.sh
+          ./scripts/copy_to_publish.sh ${{ env.DEST_DIR }}
 
       - name: Create a pull request
         id: create_pr
@@ -39,6 +43,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_FOR_SUBMODULE }}
           base: "main"
+          path: ${{ env.DEST_DIR }}
           delete-branch: true
           draft: false
           title: "Publish blog contents"
