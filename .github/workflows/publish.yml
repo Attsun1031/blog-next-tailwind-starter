@@ -24,6 +24,7 @@ jobs:
 
       - name: Build contents
         run: |
+          npm install
           npm run export
           ./scripts/copy_to_publish.sh
 
