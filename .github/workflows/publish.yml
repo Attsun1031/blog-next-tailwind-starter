@@ -18,6 +18,9 @@ jobs:
           token: ${{ secrets.PAT_FOR_SUBMODULE }}
           fetch-depth: 0
 
+      - name: Update Submodules
+        run: git submodule update --remote
+
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
@@ -40,6 +43,7 @@ jobs:
           delete-branch: true
           draft: false
           title: "Publish blog contents"
+          commit-message: "Publish blog contents"
           labels: release
           body: |
             Merge and publish blog contents.
