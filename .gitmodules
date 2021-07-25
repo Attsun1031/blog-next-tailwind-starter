@@ -1,6 +1,3 @@
-[submodule "out"]
-	path = out
-	url = git@github.com:Attsun1031/Attsun1031.github.io.git
 [submodule "published-contents"]
 	path = published-contents
 	url = git@github.com:Attsun1031/Attsun1031.github.io.git
