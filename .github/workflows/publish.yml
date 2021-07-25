@@ -35,6 +35,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_FOR_SUBMODULE }}
           path: "published-contents"
+          base: "main"
           branch: publish-blog
           delete-branch: true
           draft: false
