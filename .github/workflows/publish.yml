@@ -21,11 +21,10 @@ jobs:
       - name: Update Submodules
         run: |
           git submodule update --remote
-
-      - name: Convert to full clone
-        working-directory: published-contents
-        run: |
-          git fetch --unshallow
+          echo "==="
+          ls -l .git/
+          echo "==="
+          ls -l published-contents/.git/
 
       - uses: actions/setup-node@v2
         with:
