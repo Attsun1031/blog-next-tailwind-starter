@@ -21,10 +21,6 @@ jobs:
       - name: Update Submodules
         run: |
           git submodule update --remote
-          echo "==="
-          ls -l .git/
-          echo "==="
-          ls -l published-contents/.git/
 
       - uses: actions/setup-node@v2
         with:
@@ -42,7 +38,6 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT_FOR_SUBMODULE }}
-          path: "published-contents"
           base: "main"
           delete-branch: true
           draft: false
