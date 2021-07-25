@@ -21,9 +21,9 @@ jobs:
       - name: Update Submodules
         run: |
           git submodule update --remote
-          cd published-contents
-          git pull origin main
-          cd -
+          # cd published-contents
+          # git pull origin main
+          # cd -
 
       - uses: actions/setup-node@v2
         with:
@@ -41,9 +41,9 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT_FOR_SUBMODULE }}
-          path: "published-contents"
+          repository: "Attsun1031/Attsun1031.github.io"
+          # path: "published-contents"
           base: "main"
-          branch: publish-blog
           delete-branch: true
           draft: false
           title: "Publish blog contents"
