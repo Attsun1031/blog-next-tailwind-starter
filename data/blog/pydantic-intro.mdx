@@ -1,0 +1,142 @@
+---
+title: 'FastAPIを使っていなくても、Pydanticは便利です'
+date: '2021-08-21'
+draft: false
+summary: 'pydanticの便利な機能の紹介です。'
+tags: ['tech', 'python', 'pydantic']
+---
+
+# About
+
+pydantic 単体でも利用可能な便利な機能についてご紹介します。
+
+# TL;DR
+
+# pydantic とは
+
+[公式ドキュメント](https://pydantic-docs.helpmanual.io/) の冒頭には以下のような記載があります。
+
+> Data validation and settings management using python type annotations.
+
+python の型アノテーションを使った、データバリデーションと設定管理のライブラリ、ですね。
+
+## 基本的な使い方
+
+このあとの話を理解するのに必要な、基本となる機能をさらっと紹介します。
+
+### モデルの定義
+
+pydantic では、クラスを使ってモデルを定義します。
+各フィールドには型が必要です。
+
+```python3
+from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel, Field
+
+
+class Order(BaseModel):
+    name: str
+    created_at: datetime
+    price: float = Field(..., gt=0)
+    note: Optional[str] = None
+```
+
+### インスタンス化とバリデーション
+
+dict オブジェクトから、モデルオブジェクトを生成します。生成時に、モデル定義に従ったバリデーションが行われます。
+バリデーションに違反した場合、例外となります。
+
+```python3
+# OK
+o1 = Order.parse_obj({"name": "order1", "created_at": datetime.now(), "price": 100.1})
+# NG (created_atがない)
+o2 = Order.parse_obj({"name": "order2", "price": 100.1})
+# NG (priceが0未満)
+o3 = Order.parse_obj({"name": "order3", "created_at": datetime.now(), "price": -1})
+```
+
+### pydantic と FastAPI
+
+FastAPI のユーザーであれば、[コチラ](https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel) にあるように、リクエストボディを定義するライブラリとして馴染みがでしょう。
+
+ただ、実際は FastAPI 専用のライブラリというわけではなく、pydantic 単体での利用でも非常に便利なのです。
+以下では、単体としてどのような利用があるかをご紹介します。
+
+# pydantic 単体での具体的なユースケース
+
+## (1) json 等で記述されたファイルを安全に読み書きする
+
+シンプルなユースケースとして、外部ファイルの入出力を型安全に行うというものがあります。
+
+例えば、先程定義した `Order` モデルを json ファイルとして扱うとしましょう。
+
+### json ファイルを読み取り、モデルオブジェクトを生成
+
+```python3
+from pathlib import Path
+
+fpath = Path(...)
+
+model = Order.parse_file(fpath)
+```
+
+json の中身がスキーマとずれていれば、例外となります。
+
+### モデルオブジェクトを、json ファイルへ書き込み
+
+```python3
+from pathlib import Path
+
+fpath = Path(...)
+
+model = Order.parse_file(fpath)
+fpath.write_text(model.json())
+```
+
+シンプルですね！ `datetime` 型のような、encoder の設定無しには扱えない型もよしなに変換してくれます。(ISO フォーマットが利用されます)
+
+## (2) 環境変数を混じえた、アプリケーション設定の読み込み
+
+入力ソースが複数ある環境設定の読み込みにも利用できます。
+
+公式のガイドは[コチラ](https://pydantic-docs.helpmanual.io/usage/settings/)。
+
+### 設定の定義
+
+通常のモデルと異なり、 `BaseSettings` クラスを利用します。
+
+```python3
+from pydantic import BaseSettings
+
+
+class AppSettings(BaseSettings):
+    api_key: str
+    debug_mode: bool = False
+
+    class Config:
+        env_prefix = 'my_app_'
+```
+
+### 環境変数・引数からの読み取り
+
+例えば、 `MY_APP_API_KEY` のような環境変数が定義されている場合、そこから読み取ります。
+
+```python3
+# api_key は必須だが、環境変数定義があるためインスタンス化可能
+s = AppSettings()
+```
+
+# dataclass との比較
+
+Python に組み込みで搭載されている `dataclass` と似てるようにも感じますので、比較をしてみます。
+
+ちなみに `model.dict()` とすると、str ではなく dict オブジェクトに変換されます。
+
+---
+
+以上、GCP で実行前に気をつけたい 3 つのことの紹介でした。
+
+```
+
+```
