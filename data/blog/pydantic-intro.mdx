@@ -29,7 +29,7 @@ python の型アノテーションを使った、データバリデーション�
 pydantic では、クラスを使ってモデルを定義します。
 各フィールドには型が必要です。
 
-```python3
+```python
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, Field
@@ -47,7 +47,7 @@ class Order(BaseModel):
 dict オブジェクトから、モデルオブジェクトを生成します。生成時に、モデル定義に従ったバリデーションが行われます。
 バリデーションに違反した場合、例外となります。
 
-```python3
+```python
 # OK
 o1 = Order.parse_obj({"name": "order1", "created_at": datetime.now(), "price": 100.1})
 # NG (created_atがない)
@@ -73,7 +73,7 @@ FastAPI のユーザーであれば、[コチラ](https://fastapi.tiangolo.com/t
 
 ### json ファイルを読み取り、モデルオブジェクトを生成
 
-```python3
+```python
 from pathlib import Path
 
 fpath = Path(...)
@@ -85,7 +85,7 @@ json の中身がスキーマとずれていれば、例外となります。
 
 ### モデルオブジェクトを、json ファイルへ書き込み
 
-```python3
+```python
 from pathlib import Path
 
 fpath = Path(...)
@@ -106,7 +106,7 @@ fpath.write_text(model.json())
 
 通常のモデルと異なり、 `BaseSettings` クラスを利用します。
 
-```python3
+```python
 from pydantic import BaseSettings
 
 
@@ -122,10 +122,19 @@ class AppSettings(BaseSettings):
 
 例えば、 `MY_APP_API_KEY` のような環境変数が定義されている場合、そこから読み取ります。
 
-```python3
+```python
 # api_key は必須だが、環境変数定義があるためインスタンス化可能
 s = AppSettings()
 ```
+
+一方、引数としても与えられた場合、引数が優先されます。
+
+```python
+# api_keyは"aaa"となる
+s = AppSettings(api_key="aaa")
+```
+
+その他、dotenv や Secret からの読み取りにも対応しており、完全な優先順序は[コチラ](https://pydantic-docs.helpmanual.io/usage/settings/#field-value-priority)。順序のカスタマイズも可能です。
 
 # dataclass との比較
 
