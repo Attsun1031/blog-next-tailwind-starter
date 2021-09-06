@@ -58,7 +58,7 @@ o3 = Order.parse_obj({"name": "order3", "created_at": datetime.now(), "price": -
 
 ### pydantic と FastAPI
 
-FastAPI のユーザーであれば、[コチラ](https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel) にあるように、リクエストボディを定義するライブラリとして馴染みがでしょう。
+FastAPI のユーザーであれば、[コチラ](https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel) にあるように、リクエストボディを定義するライブラリとして馴染みがあるでしょう。
 
 ただ、実際は FastAPI 専用のライブラリというわけではなく、pydantic 単体での利用でも非常に便利なのです。
 以下では、単体としてどのような利用があるかをご紹介します。
@@ -81,7 +81,7 @@ fpath = Path(...)
 model = Order.parse_file(fpath)
 ```
 
-json の中身がスキーマとずれていれば、例外となります。
+`Object.parse_file` で、json の中身がスキーマとずれていれば、例外となります。
 
 ### モデルオブジェクトを json ファイルへ書き込み
 
@@ -120,7 +120,7 @@ class AppSettings(BaseSettings):
 
 ### 環境変数・引数からの読み取り
 
-例えば、 `MY_APP_API_KEY` のような環境変数が定義されている場合、そこから読み取ります。
+例えば、 `MY_APP_API_KEY` のような環境変数が定義されている場合、 `api_key` フィールドに入る値はその環境変数から読み取ります。
 
 ```python
 # api_key は必須だが、環境変数定義があるためインスタンス化可能
@@ -130,7 +130,7 @@ s = AppSettings()
 一方、引数としても与えられた場合、引数が優先されます。
 
 ```python
-# api_keyは"aaa"となる
+# 環境変数 MY_APP_API_KEY の値は無視され、api_keyは"aaa"となる
 s = AppSettings(api_key="aaa")
 ```
 
@@ -153,7 +153,7 @@ s = AppSettings(api_key="aaa")
 | 2021-08-31           | JP       | 25               | 35               |
 | 2021-09-01           | JP       | 23               | 31               |
 
-各カラムには、以下の入力ルールが存在します。
+このデータには、以下の入力ルールが存在します。
 
 - 入力日は `YYYY-MM-DD` 形式
 - 国コードは[ISO-3166-1 alpha2](https://ja.wikipedia.org/wiki/ISO_3166-1)
@@ -169,6 +169,7 @@ from datetime import date
 from pydantic import BaseModel, Field, root_validator, validator
 
 
+# 受付可能な国コード
 valid_iso_3166_1_alpha2_values: set = {"JP", "SG", "US"}
 
 
@@ -219,7 +220,7 @@ t = Temperature.parse_obj(d)
 
 実装のポイントを解説します。
 
-- 例えば `gspread` の `get_all_records` を利用してスプレッドシートを読み取ると、先頭行の列名がキーとなった dict 配列が取得できます。
+- 例えば `gspread` の `get_all_records()` を利用してスプレッドシートを読み取ると、先頭行の列名がキーとなった dict 配列が取得できます。
 - `Field(alias=...)` で日本語列名を定義し、`allow_population_by_field_name` を設定することで、日本語列名がキーとなっている dict を実際のフィールドにマッピングしながら読み込めます。
 - 型に `date` を指定すれば、自動的に `YYYY-MM-DD` 形式のバリデーションが実施されます。
 - 国コードのチェックは、 `validator` を使った `check_country_code` として実装しています。このように、単一フィールドのバリデーションは `validator` を使い自由度高く実装できます。
@@ -246,9 +247,9 @@ dataclass にはバリデーションの機能はありません。
 型を定義できますが、バリデーションが行われるわけではないので、実際には異なる型のデータをセットできてしまいます。
 
 ```python
- @dataclass
-    class P:
-        i: int
+@dataclass
+class P:
+    i: int
 
 # 例外にはならない
 P(i="hoge")
@@ -258,7 +259,7 @@ P(i="hoge")
 
 dataclass は `asdict` を使うことで、dict への変換はできます。しかし、実際に文字列に変換するにはその dict を `json.dumps` などしなければいけません。また、`datetime` 型が入っていた場合、単純な `json.dumps` では例外となってしまうため、ひと手間必要です。
 
-一方、pydantic では、`.json()` や `.parse_raw()` 関数を使うことでストレートに文字列・オブジェクト間の変換ができます。また、`datetime` のような型もうまく扱うことができます。
+一方、pydantic では、`.json()` や `.parse_raw()` 関数を使うことで簡単に文字列・オブジェクト間の変換ができます。また、`datetime` のような型もうまく扱うことができます。
 
 ### イミュータブル
 
@@ -274,7 +275,8 @@ class PP(BaseModel):
 
 dataclass の場合は hash 化できますが、pydantic の場合はイミュータブルであってもハッシュ化できません。
 
-全体的に pydantic よりな比較をしてしまいましたが、対比して使うものではなく、バリデーションが必要なデータモデルを定義するには pydantic が必要でしょう。そこまで厳密でない便利なデータホルダーを定義するなら dataclass で十分でしょう。
+全体的に pydantic 寄りな比較をしてしまいましたが、この２つは対比してどちらか一方のみを使うものではないと考えています。
+バリデーションが必要なデータモデルを定義するには pydantic が必要でしょう。そこまで厳密でない便利なデータホルダーを定義するなら dataclass で十分でしょう。
 
 ## PEP 563 の影響
 
@@ -294,7 +296,3 @@ https://methane.hatenablog.jp/entry/2021/04/21/%60from___future___import_annotat
 ---
 
 以上、pydantic の紹介でした。データを取り回すにはとても便利なライブラリなので重宝しています！
-
-```
-
-```
