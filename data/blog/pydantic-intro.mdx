@@ -1,6 +1,6 @@
 ---
 title: 'FastAPIを使っていなくても、Pydanticは便利です'
-date: '2021-08-31'
+date: '2021-09-06'
 draft: false
 summary: 'pydanticの便利な機能の紹介です。'
 tags: ['tech', 'python', 'pydantic']
@@ -276,11 +276,20 @@ dataclass の場合は hash 化できますが、pydantic の場合はイミュ�
 
 全体的に pydantic よりな比較をしてしまいましたが、対比して使うものではなく、バリデーションが必要なデータモデルを定義するには pydantic が必要でしょう。そこまで厳密でない便利なデータホルダーを定義するなら dataclass で十分でしょう。
 
-## PEP 563 と PEP649
+## PEP 563 の影響
+
+pydantic はアノテーション実行時の型情報を利用しているのですが、3.10 でデフォルトの挙動となる予定だった [PEP563](https://www.python.org/dev/peps/pep-0563/) が pydantic の動作に影響を与える、という懸念が出ていまいた。
 
 https://twitter.com/tiangolo/status/1384596307868794882?lang=en
 
 https://github.com/samuelcolvin/pydantic/issues/2678
+
+結果的には [3.10 にはデフォルトとしない決定がなされました。](https://mail.python.org/archives/list/python-dev@python.org/thread/CLVXXPQ2T2LQ5MP2Y53VVQFCXYWQJHKZ/)
+
+詳しい内容や経緯は以下リンクにもありますので、そちらもお読みください。
+
+https://dev.to/tiangolo/the-future-of-fastapi-and-pydantic-is-bright-3pbm
+https://methane.hatenablog.jp/entry/2021/04/21/%60from___future___import_annotations%60_%E3%81%8CPython_3.10%E3%81%A7%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%E3%81%AB%E3%81%AA%E3%82%89%E3%81%AA%E3%81%8F%E3%81%AA%E3%82%8A%E3%81%BE%E3%81%97
 
 ---
 
