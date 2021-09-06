@@ -1,0 +1,298 @@
+---
+title: 'FastAPIを使っていなくても、Pydanticは便利です'
+date: '2021-09-06'
+draft: false
+summary: 'pydanticの便利な機能の紹介です。'
+tags: ['tech', 'python', 'pydantic']
+---
+
+# About
+
+pydantic 単体でも利用可能な便利な機能についてご紹介します。
+
+# TL;DR
+
+# pydantic とは
+
+[公式ドキュメント](https://pydantic-docs.helpmanual.io/) の冒頭には以下のような記載があります。
+
+> Data validation and settings management using python type annotations.
+
+python の型アノテーションを使った、データバリデーションと設定管理のライブラリ、ですね。
+
+## 基本的な使い方
+
+このあとの話を理解するのに必要な、基本となる機能をさらっと紹介します。
+
+### モデルの定義
+
+pydantic では、クラスを使ってモデルを定義します。
+各フィールドには型が必要です。
+
+```python
+from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel, Field
+
+
+class Order(BaseModel):
+    name: str
+    created_at: datetime
+    price: float = Field(..., gt=0)
+    note: Optional[str] = None
+```
+
+### インスタンス化とバリデーション
+
+dict オブジェクトから、モデルオブジェクトを生成します。生成時に、モデル定義に従ったバリデーションが行われます。
+バリデーションに違反した場合、例外となります。
+
+```python
+# OK
+o1 = Order.parse_obj({"name": "order1", "created_at": datetime.now(), "price": 100.1})
+# NG (created_atがない)
+o2 = Order.parse_obj({"name": "order2", "price": 100.1})
+# NG (priceが0未満)
+o3 = Order.parse_obj({"name": "order3", "created_at": datetime.now(), "price": -1})
+```
+
+### pydantic と FastAPI
+
+FastAPI のユーザーであれば、[コチラ](https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel) にあるように、リクエストボディを定義するライブラリとして馴染みがあるでしょう。
+
+ただ、実際は FastAPI 専用のライブラリというわけではなく、pydantic 単体での利用でも非常に便利なのです。
+以下では、単体としてどのような利用があるかをご紹介します。
+
+# pydantic 単体での具体的なユースケース
+
+## Case 1: json 等で記述されたファイルを型安全に読み書きする
+
+シンプルなユースケースとして、外部ファイルの入出力を型安全に行うというものがあります。
+
+例えば、先程定義した `Order` モデルを json ファイルとして扱うとしましょう。
+
+### json ファイルを読み取り、モデルオブジェクトを生成
+
+```python
+from pathlib import Path
+
+fpath = Path(...)
+
+model = Order.parse_file(fpath)
+```
+
+`Object.parse_file` で、json の中身がスキーマとずれていれば、例外となります。
+
+### モデルオブジェクトを json ファイルへ書き込み
+
+```python
+from pathlib import Path
+
+fpath = Path(...)
+
+model: Order = ...
+fpath.write_text(model.json())
+```
+
+シンプルですね！ `datetime` 型のような、encoder の設定無しには扱えない型もよしなに変換してくれます。(ISO フォーマットが利用されます)
+
+## Case 2: 環境変数を混じえた、アプリケーション設定の読み込み
+
+入力ソースが複数ある環境設定の読み込みにも利用できます。
+
+公式のガイドは[コチラ](https://pydantic-docs.helpmanual.io/usage/settings/)。
+
+### 設定の定義
+
+通常のモデルと異なり、 `BaseSettings` クラスを利用します。
+
+```python
+from pydantic import BaseSettings
+
+
+class AppSettings(BaseSettings):
+    api_key: str
+    debug_mode: bool = False
+
+    class Config:
+        env_prefix = 'my_app_'
+```
+
+### 環境変数・引数からの読み取り
+
+例えば、 `MY_APP_API_KEY` のような環境変数が定義されている場合、 `api_key` フィールドに入る値はその環境変数から読み取ります。
+
+```python
+# api_key は必須だが、環境変数定義があるためインスタンス化可能
+s = AppSettings()
+```
+
+一方、引数としても与えられた場合、引数が優先されます。
+
+```python
+# 環境変数 MY_APP_API_KEY の値は無視され、api_keyは"aaa"となる
+s = AppSettings(api_key="aaa")
+```
+
+その他、dotenv や Secret からの読み取りにも対応しています。完全な優先順序は[コチラ](https://pydantic-docs.helpmanual.io/usage/settings/#field-value-priority)。順序のカスタマイズも可能です。
+
+## Case 3: Google Spreadsheet に入力された日本語ヘッダー付きシートの読み取り
+
+応用として、このようなケースを考えてみましょう。
+
+### このユースケースについて
+
+1. スプレッドシートに書き込まれた情報を、Python プログラムから読み取りたい。
+1. データがこちらの想定通りに入力されているかチェックをしたい。
+1. スプレッドシートの先頭には日本語のカラム名を入力したい。
+
+イメージとしては、以下のようなスプレッドシートとなります。
+
+| 入力日（YYYY-MM-DD） | 国コード | 最低気温（摂氏） | 最高気温（摂氏） |
+| -------------------- | -------- | ---------------- | ---------------- |
+| 2021-08-31           | JP       | 25               | 35               |
+| 2021-09-01           | JP       | 23               | 31               |
+
+このデータには、以下の入力ルールが存在します。
+
+- 入力日は `YYYY-MM-DD` 形式
+- 国コードは[ISO-3166-1 alpha2](https://ja.wikipedia.org/wiki/ISO_3166-1)
+- 最低気温 <= 最高気温
+
+### pydantic を使った実装
+
+このデータを正しくかつ効率的に取り扱うには、以下のようなモデルを利用します。
+
+```python
+from datetime import date
+
+from pydantic import BaseModel, Field, root_validator, validator
+
+
+# 受付可能な国コード
+valid_iso_3166_1_alpha2_values: set = {"JP", "SG", "US"}
+
+
+class Temperature(BaseModel):
+    """
+    スプレッドシートの1行を表すモデル
+    """
+
+    input_date: date = Field(alias="入力日（YYYY-MM-DD）")
+    country_code: str = Field(alias="国コード")
+    low: float = Field(alias="最低気温（摂氏）")
+    high: float = Field(alias="最高気温（摂氏）")
+
+    class Config:
+        """
+        日本語列名での収集
+        """
+        allow_population_by_field_name = True
+
+    @validator("country_code")
+    def check_country_code(cls, v):
+        """
+        国コードがISOに存在するかチェック
+        """
+        if v not in valid_iso_3166_1_alpha2_values:
+            raise ValueError(f"Unknown country_code {v}")
+        return v
+
+    @root_validator
+    def check_low_high(cls, values):
+        """
+        low <= high の条件をチェック
+        """
+        if values["low"] > values["high"]:
+            raise ValueError(f"low is higher than high")
+        return values
+
+
+data = {
+    "入力日（YYYY-MM-DD）": "2021-08-31",
+    "国コード": "JP",
+    "最低気温（摂氏）": "28.2",
+    "最高気温（摂氏）": "38.1",
+}
+
+t = Temperature.parse_obj(d)
+```
+
+実装のポイントを解説します。
+
+- 例えば `gspread` の `get_all_records()` を利用してスプレッドシートを読み取ると、先頭行の列名がキーとなった dict 配列が取得できます。
+- `Field(alias=...)` で日本語列名を定義し、`allow_population_by_field_name` を設定することで、日本語列名がキーとなっている dict を実際のフィールドにマッピングしながら読み込めます。
+- 型に `date` を指定すれば、自動的に `YYYY-MM-DD` 形式のバリデーションが実施されます。
+- 国コードのチェックは、 `validator` を使った `check_country_code` として実装しています。このように、単一フィールドのバリデーションは `validator` を使い自由度高く実装できます。
+- 最低気温と最高気温の関係性といった、複数フィールドにまたがるチェックは `root_validator` を使って実装可能です。
+
+ちなみに、このオブジェクトは本来のフィールド名・エイリアスどちらの dict にも戻すことが可能です。
+
+```python
+# 本来のフィールド名をキーとしたdictに変換
+print(t.dict())
+# aliasに定義された日本語のフィールド名をキーとしたdictに変換
+print(t.dict(by_alias=True))
+```
+
+# Appendix
+
+## dataclass との比較
+
+データモデルを定義できるという意味においては、Python に組み込みで搭載されている `dataclass` と似てるようにも感じますので、比較をしてみます。
+
+### バリデーション
+
+dataclass にはバリデーションの機能はありません。
+型を定義できますが、バリデーションが行われるわけではないので、実際には異なる型のデータをセットできてしまいます。
+
+```python
+@dataclass
+class P:
+    i: int
+
+# 例外にはならない
+P(i="hoge")
+```
+
+### シリアライズ・デシリアライズ
+
+dataclass は `asdict` を使うことで、dict への変換はできます。しかし、実際に文字列に変換するにはその dict を `json.dumps` などしなければいけません。また、`datetime` 型が入っていた場合、単純な `json.dumps` では例外となってしまうため、ひと手間必要です。
+
+一方、pydantic では、`.json()` や `.parse_raw()` 関数を使うことで簡単に文字列・オブジェクト間の変換ができます。また、`datetime` のような型もうまく扱うことができます。
+
+### イミュータブル
+
+これはどちらでも実現できます。dataclass では `@dataclass(frozen=True)` のようにします。
+pydantic では、以下のように定義します。
+
+```python
+class PP(BaseModel):
+    i: int
+    class Config:
+        allow_mutation = False
+```
+
+dataclass の場合は hash 化できますが、pydantic の場合はイミュータブルであってもハッシュ化できません。
+
+全体的に pydantic 寄りな比較をしてしまいましたが、この２つは対比してどちらか一方のみを使うものではないと考えています。
+バリデーションが必要なデータモデルを定義するには pydantic が必要でしょう。そこまで厳密でない便利なデータホルダーを定義するなら dataclass で十分でしょう。
+
+## PEP 563 の影響
+
+pydantic はアノテーション実行時の型情報を利用しているのですが、3.10 でデフォルトの挙動となる予定だった [PEP563](https://www.python.org/dev/peps/pep-0563/) が pydantic の動作に影響を与える、という懸念が出ていまいた。
+
+https://twitter.com/tiangolo/status/1384596307868794882?lang=en
+
+https://github.com/samuelcolvin/pydantic/issues/2678
+
+結果的には [3.10 にはデフォルトとしない決定がなされました。](https://mail.python.org/archives/list/python-dev@python.org/thread/CLVXXPQ2T2LQ5MP2Y53VVQFCXYWQJHKZ/)
+
+詳しい内容や経緯は以下リンクにもありますので、そちらもお読みください。
+
+https://dev.to/tiangolo/the-future-of-fastapi-and-pydantic-is-bright-3pbm
+https://methane.hatenablog.jp/entry/2021/04/21/%60from___future___import_annotations%60_%E3%81%8CPython_3.10%E3%81%A7%E3%83%87%E3%83%95%E3%82%A9%E3%83%AB%E3%83%88%E3%81%AB%E3%81%AA%E3%82%89%E3%81%AA%E3%81%8F%E3%81%AA%E3%82%8A%E3%81%BE%E3%81%97
+
+---
+
+以上、pydantic の紹介でした。データを取り回すにはとても便利なライブラリなので重宝しています！
