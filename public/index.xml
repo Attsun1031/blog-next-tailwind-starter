@@ -7,9 +7,29 @@
       <language>ja</language>
       <managingEditor> (Tatsuya Atsumi)</managingEditor>
       <webMaster> (Tatsuya Atsumi)</webMaster>
-      <lastBuildDate>Wed, 07 Jul 2021 00:00:00 GMT</lastBuildDate>
+      <lastBuildDate>Tue, 14 Dec 2021 00:00:00 GMT</lastBuildDate>
       <atom:link href="https://attsun1031.github.io//index.xml" rel="self" type="application/rss+xml"/>
       
+  <item>
+    <guid>https://attsun1031.github.io//blog/20211214-ubie-tech-talk</guid>
+    <title>Ubie Tech Talk で、「2021/12/14 dbt 運用の7つの疑問と対策」という発表をしました。</title>
+    <link>https://attsun1031.github.io//blog/20211214-ubie-tech-talk</link>
+    <description>イベント登壇記録</description>
+    <pubDate>Tue, 14 Dec 2021 00:00:00 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    <category>data</category><category>slide</category><category>dbt</category>
+  </item>
+
+  <item>
+    <guid>https://attsun1031.github.io//blog/pydantic-intro</guid>
+    <title>FastAPIを使っていなくても、Pydanticは便利です</title>
+    <link>https://attsun1031.github.io//blog/pydantic-intro</link>
+    <description>pydanticの便利な機能の紹介です。</description>
+    <pubDate>Mon, 06 Sep 2021 00:00:00 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    <category>tech</category><category>python</category><category>pydantic</category>
+  </item>
+
   <item>
     <guid>https://attsun1031.github.io//blog/gcp-three-things</guid>
     <title>GCPで、適当に実行すべきでない3つのコト</title>
