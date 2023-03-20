@@ -7,9 +7,19 @@
       <language>ja</language>
       <managingEditor> (Tatsuya Atsumi)</managingEditor>
       <webMaster> (Tatsuya Atsumi)</webMaster>
-      <lastBuildDate>Tue, 14 Dec 2021 00:00:00 GMT</lastBuildDate>
+      <lastBuildDate>Mon, 20 Mar 2023 00:00:00 GMT</lastBuildDate>
       <atom:link href="https://attsun1031.github.io//index.xml" rel="self" type="application/rss+xml"/>
       
+  <item>
+    <guid>https://attsun1031.github.io//blog/data-jobs-in-ubie</guid>
+    <title>Ubie Discovery における、Data Engineer と他データ基盤系職種の関係</title>
+    <link>https://attsun1031.github.io//blog/data-jobs-in-ubie</link>
+    <description>Ubie Discovery のデータ基盤系職種について解説します。</description>
+    <pubDate>Mon, 20 Mar 2023 00:00:00 GMT</pubDate>
+    <author> (Tatsuya Atsumi)</author>
+    <category>ubie</category><category>jobs</category><category>data-engineer</category>
+  </item>
+
   <item>
     <guid>https://attsun1031.github.io//blog/20211214-ubie-tech-talk</guid>
     <title>Ubie Tech Talk で、「2021/12/14 dbt 運用の7つの疑問と対策」という発表をしました。</title>
